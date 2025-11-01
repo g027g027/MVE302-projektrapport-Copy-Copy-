@@ -30,7 +30,7 @@ Forskning om slumpgrafer har flera praktiska tillämpningar, bl. a. att modeller
 
 Vi utgår från teoretiska resultat inom sannolikhetsteori, samt genomför egna simuleringar i Python för att illustrera resultaten. Projektets syfte är att både hitta och visualisera tröskelvärden, sannolikhetsfördelningar och beteenden hos slumpgrafer genom att försöka besvara följande frågor:
 \begin{enumerate}
-    \item Hur stort behöver $p = p_n$ vara som funktion av $n$ för att sannolikheten att den största sammanhängande komponenten innehåller minst $0.25n$ noder går mot $1$ då $n \to \infty$?
+    \item Målet med denna del är att undersöka när en \emph{jättekomponent} uppstår i slumpgrafen  $0.25n$ noder går mot $1$ då $n \to \infty$?
     \item Vilken storlek på $p=p_n$ krävs för att sannolikheten att slumpgrafen $G_n$ är sammanhängande går mot $1$ då $n \to \infty$?
     \item Om $p = 1/n$, vad är den asymptotiska fördelningen för antalet trianglar? (En triangel är en trippel noder $u, v, w$ sådan att alla tre kanterna $uv, uw$ och $vw$ finns med i $G_n$.)
     \item Vad är den asymptotiska fördelningen för antalet isolerade, alltså noder utan koppling till någon av grafens andra noder, då $p = 1/n$?
@@ -38,17 +38,21 @@ Vi utgår från teoretiska resultat inom sannolikhetsteori, samt genomför egna 
 \end{enumerate}
 
 
-\section{Metod}
+\subsection{Metod.}
+För varje valt värde på $c$ genererades flera slumpgrafer enligt 
+$G(n,p_n)$ med $p_n = c/n$. Vi använde $n = 30\,000$ och 
+$c \in \{1.05,\,1.10,\,1.153,\,1.16,\,1.20,\,1.30\}$. 
+Varje värde på $c$ repeterades tio gånger för att minska slumpvariationer. 
 
-För att besvara frågorna har vi använt oss av både teoretisk analys och simuleringar i Python.
+Graferna genererades med \emph{Batagelj–Brandes-algoritmen}, som 
+effektivt konstruerar $G(n,p)$ i tid $\mathcal{O}(n+m)$ 
+\cite{BatageljBrandes2005}. För varje graf identifierades den största 
+sammanhängande komponenten med en bredd­först­sökning (BFS). Den relativa 
+storleken $L_1/n$ beräknades och medelvärdet över upprepningarna 
+jämfördes med den teoretiska lösningen $\beta(c)$ enligt 
+\cite[Kap.~5]{jlr1999}.
 
-\subsection{Fråga 1}
-Vi ville undersöka vid vilka värden på $p=\tfrac{c}{n}$ som den största komponenten i $G(n,p)$ innehåller minst $0.25n$ noder \cite{jlr1999}.
-Som bakgrund kan nämnas att det finns ett välkänt fasövergångsbeteende i slumpgrafer: när $c \leq 1$ består grafen mest av små komponenter, men när $c > 1$ uppträder en jättekomponent som omfattar en positiv andel av noderna.
 
-För att generera slumpgraferna använde vi Batagelj--Brandes-algoritmen,
-som gör det möjligt att skapa $G(n,p)$ i tid $O(n+m)$, där $m$ är antalet
-kanter \cite{BatageljBrandes2005}. För varje graf beräknade vi den största komponentens storlek med BFS, och upprepade experimenten för flera värden på $c$ kring den kritiska punkten.
 
 \subsection{Fråga 2}
 För fråga 2 använder vi asymptotiska resultat från grafteori som säger att tröskelvärdet för sammanhängande graf i $G(n, p)$ är $p_n = \frac{\log n}{n}$ \cite{Tesliuc2017}. Vi simulerar slumpgrafer för $n=10,100,1000,2000$ och motsvarande $p=\frac{\log n}{n}$ för att undersöka när grafen blir sammanhängande.
